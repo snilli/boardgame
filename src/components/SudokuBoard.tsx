@@ -192,7 +192,7 @@ const SudokuBoardInner: React.FC<SudokuBoardInnerProps> = ({
 												const noteX = x + cellSize * position.x
 												const noteY = y + cellSize * position.y
 
-												// Check if this value is invalid (already exists in row, column, or box)
+												// Check if this value violates Sudoku rules (already exists in row, column, or box)
 												let isInvalid = false
 
 												// Check row

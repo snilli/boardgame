@@ -4,6 +4,13 @@ const nextConfig = {
 		reactCompiler: true,
 	},
 
+	// GitHub Pages configuration
+	output: 'export',
+	trailingSlash: true,
+	images: {
+		unoptimized: true,
+	},
+
 	turbopack: {
 		resolveAlias: {
 			'@app': './src',

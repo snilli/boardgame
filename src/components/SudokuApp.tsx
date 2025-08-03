@@ -15,6 +15,76 @@ export default function SudokuApp() {
 	const [gameState, setGameState] = useState<SudokuGameState | null>(null)
 	const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null)
 	const [highlightedNumber, setHighlightedNumber] = useState<number | null>(null)
+	
+	// Undo system
+	const [gameStateHistory, setGameStateHistory] = useState<SudokuGameState[]>([])
+	const maxHistorySize = 20 // Keep last 20 moves (reduced for better performance)
+	const lastSaveTimeRef = useRef<number>(0)
+
+	// Save current state to history before making changes
+	const saveStateToHistory = useCallback((currentState: SudokuGameState) => {
+		const now = Date.now()
+		
+		// Performance optimization: prevent saving too frequently (debounce 100ms)
+		if (now - lastSaveTimeRef.current < 100) {
+			return
+		}
+		lastSaveTimeRef.current = now
+		
+		setGameStateHistory(prev => {
+			// Performance optimization: only copy the essential game data
+			// Memory usage: ~81 numbers + small objects = ~1KB per state
+			// 20 states = ~20KB max memory usage for undo history
+			const stateCopy: SudokuGameState = {
+				board: currentState.board.map(row => [...row]),
+				initialBoard: currentState.initialBoard, // No need to copy - it's immutable
+				solution: currentState.solution, // No need to copy - it's immutable
+				notes: { ...currentState.notes },
+				errors: { ...currentState.errors },
+				noteMode: currentState.noteMode,
+				isCompleted: currentState.isCompleted,
+				isPaused: currentState.isPaused,
+				difficulty: currentState.difficulty,
+				difficultyName: currentState.difficultyName,
+				startTime: currentState.startTime,
+				endTime: currentState.endTime
+			}
+			const newHistory = [...prev, stateCopy]
+			// Keep only the last maxHistorySize states
+			return newHistory.slice(-maxHistorySize)
+		})
+	}, [])
+
+	// Undo last move
+	const handleUndo = useCallback(() => {
+		if (gameStateHistory.length === 0 || !gameState) return
+
+		const previousState = gameStateHistory[gameStateHistory.length - 1]
+		
+		// Use flushSync to ensure immediate state update and re-render
+		flushSync(() => {
+			// Create a completely new object with deep copies to ensure React detects the change
+			const restoredState: SudokuGameState = {
+				board: previousState.board.map(row => [...row]), // Deep copy board
+				initialBoard: previousState.initialBoard, // Immutable reference
+				solution: previousState.solution, // Immutable reference
+				notes: JSON.parse(JSON.stringify(previousState.notes)), // Deep copy notes object
+				errors: JSON.parse(JSON.stringify(previousState.errors)), // Deep copy errors object
+				noteMode: previousState.noteMode,
+				isCompleted: previousState.isCompleted,
+				isPaused: previousState.isPaused,
+				difficulty: previousState.difficulty,
+				difficultyName: previousState.difficultyName,
+				startTime: previousState.startTime,
+				endTime: previousState.endTime
+			}
+			
+			setGameState(restoredState)
+		})
+		
+		// Remove the last state from history
+		setGameStateHistory(prev => prev.slice(0, -1))
+	}, [gameStateHistory, gameState])
 
 	// Game Flow Handlers
 	const handleStartGame = useCallback(() => {
@@ -25,11 +95,13 @@ export default function SudokuApp() {
 		const newGameState = createInitialGameState(difficulty)
 		setGameState(newGameState)
 		setGameMode('playing')
+		setGameStateHistory([]) // Clear history for new game
 	}, [])
 
 	const handleBackToStart = useCallback(() => {
 		setGameMode('start')
 		setGameState(null)
+		setGameStateHistory([]) // Clear history when going back to start
 	}, [])
 
 	const handleNewGame = useCallback(() => {
@@ -37,6 +109,7 @@ export default function SudokuApp() {
 		setGameState(null)
 		setSelectedCell(null)
 		setHighlightedNumber(null)
+		setGameStateHistory([]) // Clear history for new game
 	}, [])
 
 	const handlePause = useCallback(() => {
@@ -92,6 +165,9 @@ export default function SudokuApp() {
 				return
 			}
 
+			// Save current state to history before making changes
+			saveStateToHistory(gameState)
+
 			flushSync(() => {
 				setGameState((prev) => {
 					if (!prev) return null
@@ -136,6 +212,55 @@ export default function SudokuApp() {
 						delete newState.errors[cellKey]
 						delete newState.notes[cellKey]
 
+						// Remove this number from notes in related cells (same row, column, and 3x3 box)
+						if (value !== 0) {
+							// Same row
+							for (let c = 0; c < 9; c++) {
+								const relatedKey = `${row}-${c}`
+								if (newState.notes[relatedKey]) {
+									const noteIndex = newState.notes[relatedKey].indexOf(value)
+									if (noteIndex >= 0) {
+										newState.notes[relatedKey].splice(noteIndex, 1)
+										if (newState.notes[relatedKey].length === 0) {
+											delete newState.notes[relatedKey]
+										}
+									}
+								}
+							}
+
+							// Same column
+							for (let r = 0; r < 9; r++) {
+								const relatedKey = `${r}-${col}`
+								if (newState.notes[relatedKey]) {
+									const noteIndex = newState.notes[relatedKey].indexOf(value)
+									if (noteIndex >= 0) {
+										newState.notes[relatedKey].splice(noteIndex, 1)
+										if (newState.notes[relatedKey].length === 0) {
+											delete newState.notes[relatedKey]
+										}
+									}
+								}
+							}
+
+							// Same 3x3 box
+							const boxRow = Math.floor(row / 3) * 3
+							const boxCol = Math.floor(col / 3) * 3
+							for (let r = boxRow; r < boxRow + 3; r++) {
+								for (let c = boxCol; c < boxCol + 3; c++) {
+									const relatedKey = `${r}-${c}`
+									if (newState.notes[relatedKey]) {
+										const noteIndex = newState.notes[relatedKey].indexOf(value)
+										if (noteIndex >= 0) {
+											newState.notes[relatedKey].splice(noteIndex, 1)
+											if (newState.notes[relatedKey].length === 0) {
+												delete newState.notes[relatedKey]
+											}
+										}
+									}
+								}
+							}
+						}
+
 						// Check if correct
 						if (value !== 0 && value !== newState.solution[row][col]) {
 							newState.errors[cellKey] = true
@@ -160,7 +285,7 @@ export default function SudokuApp() {
 
 			setHighlightedNumber(value !== 0 ? value : null)
 		},
-		[gameState, selectedCell],
+		[gameState, selectedCell, saveStateToHistory],
 	)
 
 	const handleClearCell = useCallback(() => {
@@ -171,18 +296,22 @@ export default function SudokuApp() {
 		// Don't allow clearing initial clues
 		if (gameState.initialBoard[row][col] !== 0) return
 
+		// Save current state to history before clearing
+		saveStateToHistory(gameState)
+
 		setGameState((prev) => {
 			if (!prev) return null
 			const newState = { ...prev }
 			newState.board[row][col] = 0
 			const cellKey = `${row}-${col}`
 			delete newState.errors[cellKey]
+			delete newState.notes[cellKey] // Clear notes from this cell too
 			newState.isCompleted = false
 			return newState
 		})
 
 		setHighlightedNumber(null)
-	}, [gameState, selectedCell])
+	}, [gameState, selectedCell, saveStateToHistory])
 
 	const handleToggleNoteMode = useCallback(() => {
 		if (!gameState) return
@@ -223,9 +352,12 @@ export default function SudokuApp() {
 				handleNumberInput(parseInt(key))
 			} else if (key === 'Backspace' || key === 'Delete' || key === '0') {
 				handleClearCell()
+			} else if ((key === 'z' || key === 'Z') && (event.ctrlKey || event.metaKey)) {
+				// Ctrl+Z or Cmd+Z for undo
+				handleUndo()
 			}
 		},
-		[selectedCell, gameState, handleNumberInput, handleClearCell, handleToggleNoteMode, handlePause],
+		[selectedCell, gameState, handleNumberInput, handleClearCell, handleToggleNoteMode, handlePause, handleUndo],
 	)
 
 	// Add keyboard listener
@@ -276,6 +408,18 @@ export default function SudokuApp() {
 						)}
 					>
 						📝 Notes
+					</button>
+					<button
+						onClick={handleUndo}
+						disabled={gameStateHistory.length === 0}
+						className={cn(
+							'cursor-pointer rounded-xl border-none px-6 py-3 text-sm font-bold',
+							gameStateHistory.length > 0 
+								? 'bg-purple-500 text-white hover:bg-purple-600' 
+								: 'bg-gray-300 text-gray-500 cursor-not-allowed'
+						)}
+					>
+						↶ Undo
 					</button>
 					<button
 						onClick={handlePause}

@@ -321,3 +321,42 @@ experimental: {
 - **Next.js 15.4.5** - Turbopack stable, use `turbopack` config
 - **React 19** - Latest stable
 - **Tailwind CSS v4** - Latest major version
+
+### GitHub Pages Deployment
+
+**This project is configured for GitHub Pages deployment with automatic CI/CD:**
+
+- **Static Export**: Next.js configured with `output: 'export'` for static generation
+- **GitHub Actions**: Auto-deployment on push to main branch
+- **Build Command**: `pnpm build` generates static files in `/out` directory
+- **Deploy Command**: `pnpm deploy` builds and adds `.nojekyll` file
+
+**GitHub Pages Setup:**
+1. Repository Settings → Pages → Source: "GitHub Actions"
+2. Push to main branch triggers automatic deployment
+3. Site available at: `https://username.github.io/repository-name`
+
+### Git Commit Message Rules
+
+**NEVER include Claude AI attribution in commit messages:**
+
+```bash
+# ❌ WRONG - Don't include Claude attribution
+git commit -m "Fix bug
+
+🤖 Generated with Claude Code
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+# ✅ CORRECT - Clean, professional commit messages
+git commit -m "Fix undo system bug where board didn't update visually
+
+- Use flushSync for immediate state updates
+- Implement proper deep copying for React state
+- Optimize performance with JSON serialization"
+```
+
+**Commit message format:**
+- Clear, descriptive title (50 chars max)
+- Blank line
+- Detailed bullet points if needed
+- No AI tool attribution
