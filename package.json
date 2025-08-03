@@ -1,0 +1,43 @@
+{
+	"name": "web-view-test",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "next dev --turbo",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint --fix && prettier --write ."
+	},
+	"dependencies": {
+		"@visx/event": "^3.12.0",
+		"@visx/group": "^3.12.0",
+		"@visx/responsive": "^3.12.0",
+		"@visx/scale": "^3.12.0",
+		"@visx/shape": "^3.12.0",
+		"clsx": "^2.1.1",
+		"motion": "^12.23.12",
+		"next": "^15.4.5",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1",
+		"tailwind-merge": "^3.3.1"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3.3.1",
+		"@next/eslint-plugin-next": "^15.4.5",
+		"@playwright/test": "^1.54.2",
+		"@tailwindcss/postcss": "^4.1.11",
+		"@types/node": "^24.1.0",
+		"@types/react": "^19.1.9",
+		"@types/react-dom": "^19.1.7",
+		"babel-plugin-react-compiler": "19.1.0-rc.2",
+		"eslint": "^9.32.0",
+		"eslint-config-next": "^15.4.5",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"playwright": "^1.54.2",
+		"prettier": "^3.6.2",
+		"prettier-plugin-tailwindcss": "^0.6.14",
+		"tailwindcss": "^4.1.11",
+		"typescript": "~5.8.3"
+	}
+}
