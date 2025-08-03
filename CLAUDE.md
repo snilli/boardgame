@@ -136,13 +136,13 @@ The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation w
 		<div className="space-y-4">
 			{/* Difficulty buttons */}
 			<motion.button className="w-full rounded-2xl bg-green-500 px-16 py-4 text-xl font-bold text-white shadow-lg">
-				🟢 Easy
+				Easy
 			</motion.button>
 			<motion.button className="w-full rounded-2xl bg-yellow-500 px-16 py-4 text-xl font-bold text-white shadow-lg">
-				🟡 Medium
+				Medium
 			</motion.button>
 			<motion.button className="w-full rounded-2xl bg-red-500 px-16 py-4 text-xl font-bold text-white shadow-lg">
-				🔴 Hard
+				Hard
 			</motion.button>
 		</div>
 
