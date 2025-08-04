@@ -1,6 +1,7 @@
 import { motion } from 'motion/react'
 import { useState } from 'react'
 import { cn } from '@app/utils/cn'
+import { SUDOKU_NUMBERS } from '@app/constants/sudoku'
 
 interface GameStartScreenProps {
 	onStartGame: () => void
@@ -21,7 +22,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 			{/* Animated Background Elements */}
 			<div className="absolute inset-0">
 				{/* Floating Numbers */}
-				{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num, index) => (
+				{SUDOKU_NUMBERS.map((num, index) => (
 					<motion.div
 						key={num}
 						className="absolute text-6xl font-bold text-white/10"
@@ -101,7 +102,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 											key={i}
 											className="flex h-8 w-8 items-center justify-center rounded bg-white/20 text-sm font-bold text-white"
 										>
-											{[1,2,3,4,5,6,7,8,9][i]}
+											{SUDOKU_NUMBERS[i]}
 										</div>
 									))}
 								</div>
