@@ -7,8 +7,8 @@ const nextConfig = {
 	// GitHub Pages configuration
 	output: 'export',
 	trailingSlash: true,
-	basePath: '/boardgame',
-	assetPrefix: '/boardgame',
+	// basePath: '/boardgame',
+	// assetPrefix: '/boardgame',
 	images: {
 		unoptimized: true,
 	},

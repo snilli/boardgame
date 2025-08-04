@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
+import { useInterval } from 'usehooks-ts'
 
 interface UseGameTimerProps {
 	startTime: number
@@ -8,27 +9,12 @@ interface UseGameTimerProps {
 
 export function useGameTimer({ startTime, endTime, isPaused }: UseGameTimerProps) {
 	const [currentTime, setCurrentTime] = useState(Date.now())
-	const intervalRef = useRef<number | null>(null)
 
-	useEffect(() => {
-		if (isPaused || endTime) {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current)
-				intervalRef.current = null
-			}
-			return
-		}
-
-		intervalRef.current = window.setInterval(() => {
-			setCurrentTime(Date.now())
-		}, 1000)
-
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current)
-			}
-		}
-	}, [isPaused, endTime])
+	// Use usehooks-ts useInterval - clean and simple!
+	useInterval(
+		() => setCurrentTime(Date.now()),
+		isPaused || endTime ? null : 1000
+	)
 
 	const getElapsedTime = () => {
 		const endTimeToUse = endTime || currentTime

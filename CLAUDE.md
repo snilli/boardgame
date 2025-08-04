@@ -27,16 +27,22 @@ This project uses **pnpm** as the package manager, not npm.
 - **Tailwind CSS v4** for styling - ONLY Tailwind classes, NO inline styles
 - **ESLint** with Next.js core-web-vitals config
 - **cn** for style condition utilities
+- **Zustand** for state management with persistence and devtools
+- **usehooks-ts** for common React hooks (useLocalStorage, useInterval, useDebounce, etc.)
+- **es-toolkit** for utility functions (replaces lodash - lighter and faster)
+- **immer** for immutable state updates in Zustand
 
 ### Project Structure
 
 - `src/app/` - Next.js App Router structure
     - `layout.tsx` - Root layout component
     - `page.tsx` - Home page with Sudoku game
-- `src/components/` - React components (SudokuApp, SudokuBoard, SudokuControls, etc.)
+- `src/components/` - React components (SudokuApp, SudokuBoard, GameStartScreen, DifficultyScreen)
 - `src/domain/` - Business logic and domain models (Sudoku game implementation)
-- `src/patterns/` - Design patterns (Factory pattern for puzzle generation)
-- `src/utils/` - Utility functions (cn for class names)
+- `src/patterns/` - Design patterns (GameState, PuzzleFactory, DifficultyStrategy)
+- `src/utils/` - Utility functions (cn for class names, es-toolkit utilities)
+- `src/stores/` - Zustand state management stores
+- `src/hooks/` - Custom React hooks using usehooks-ts
 
 ### Routing Architecture
 
@@ -49,7 +55,7 @@ Uses Next.js App Router:
 
 ### Domain Logic
 
-The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation with:
+The `src/domain/sudoku-game.ts` file contains a comprehensive Sudoku game implementation with:
 
 - Object-oriented design using constraint managers (Row, Column, Box)
 - Seeded random number generation for reproducible puzzles
@@ -84,6 +90,7 @@ The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation w
 
 **This is a GAME - it must look amazing:**
 
+- **Premium UI design** - Gradients, 3D effects, and engaging animations throughout
 - **Motion animations** - Use Motion package for smooth transitions and micro-interactions
 - **Dynamic visual effects** - Gradients, shadows, glows, and particle effects where appropriate
 - **Game-like aesthetics** - NOT plain text or boring forms - this should feel like playing a premium game
@@ -134,7 +141,6 @@ The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation w
 		<motion.h1 className="mb-12 text-5xl font-bold text-slate-800">Choose Difficulty</motion.h1>
 
 		<div className="space-y-4">
-			{/* Difficulty buttons */}
 			<motion.button className="w-full rounded-2xl bg-green-500 px-16 py-4 text-xl font-bold text-white shadow-lg">
 				Easy
 			</motion.button>
@@ -146,7 +152,6 @@ The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation w
 			</motion.button>
 		</div>
 
-		{/* Back button */}
 		<motion.button className="rounded-xl bg-slate-200 px-12 py-3 text-lg font-semibold text-slate-700">
 			Back
 		</motion.button>
@@ -178,6 +183,8 @@ The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation w
 **Dependencies (Runtime)**: Only packages needed in production
 
 - **Core Framework**: `next`, `react`, `react-dom`
+- **State Management**: `zustand`, `immer` for state management with immutable updates
+- **Utility Libraries**: `es-toolkit`, `usehooks-ts` for common functions and hooks
 - **UI Visualization**: `@visx/*` packages for SVG data visualization
 - **Animation**: `motion` for smooth game transitions and micro-interactions
 - **Styling**: `clsx`, `tailwind-merge` for conditional classes with cn() utility
@@ -221,19 +228,102 @@ The `src/domain/b.ts` file contains a comprehensive Sudoku game implementation w
 - **Build Performance**: Cold build ~1 second, incremental builds near-instant
 - **Bundle Size**: ~167kB for main game page (includes motion animations)
 
+## State Management Architecture
+
+### Zustand Stores - MANDATORY for State Management
+
+**ALWAYS use Zustand for state management - NEVER use useState for complex state:**
+
+```tsx
+// ✅ CORRECT - Zustand stores
+import { useGameStore, useUIStore, useSettingsStore } from '@app/stores'
+
+const { gameState, createNewGame, handleCellInput } = useGameStore()
+const { selectedCell, handleCellSelection } = useUIStore()
+const { gameSettings, updateSettings } = useSettingsStore()
+
+// ❌ WRONG - Complex useState
+const [gameState, setGameState] = useState<SudokuGameState | null>(null)
+const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null)
+```
+
+**Zustand Store Structure:**
+- `src/stores/gameStore.ts` - Game state, actions, undo/redo
+- `src/stores/uiStore.ts` - UI state, selections, modals
+- `src/stores/settingsStore.ts` - User preferences with localStorage persistence
+
+**Store Features:**
+- **Immer middleware** for immutable updates
+- **Persist middleware** for localStorage persistence
+- **Devtools middleware** for debugging
+- **Type-safe** with TypeScript
+
+### React Hooks Philosophy
+
+**ALWAYS use usehooks-ts when available - NEVER implement custom hooks for common patterns:**
+
+```tsx
+// ✅ CORRECT - Use usehooks-ts
+import { useLocalStorage, useInterval, useDebounceValue, useWindowSize, useMediaQuery } from 'usehooks-ts'
+
+const [settings, setSettings] = useLocalStorage('game-settings', defaultSettings)
+const { width } = useWindowSize()
+const isMobile = useMediaQuery('(max-width: 768px)')
+const [debouncedValue] = useDebounceValue(inputValue, 500)
+
+// ❌ WRONG - Custom implementation
+const [settings, setSettings] = useState(() => {
+  const saved = localStorage.getItem('game-settings')
+  return saved ? JSON.parse(saved) : defaultSettings
+})
+```
+
+**Available usehooks-ts hooks:**
+- `useLocalStorage` / `useSessionStorage` - Persistent storage
+- `useInterval` / `useTimeout` - Timing hooks
+- `useDebounceValue` / `useDebounceCallback` - Debouncing
+- `useWindowSize` / `useMediaQuery` - Responsive design
+- `useEventListener` - Event handling
+- `useBoolean` / `useToggle` - Boolean state management
+
+### Utility Functions Philosophy
+
+**ALWAYS use es-toolkit when available - NEVER implement custom utility functions:**
+
+```tsx
+// ✅ CORRECT - Use es-toolkit
+import { chunk, flatten, uniq, groupBy, debounce, throttle, cloneDeep } from 'es-toolkit'
+
+const chunks = chunk(array, 3)
+const unique = uniq(duplicates)
+const cloned = cloneDeep(complexObject)
+
+// ❌ WRONG - Custom implementation
+const chunks = []
+for (let i = 0; i < array.length; i += 3) {
+  chunks.push(array.slice(i, i + 3))
+}
+```
+
+**Available es-toolkit functions:**
+- **Array**: `chunk`, `flatten`, `uniq`, `groupBy`, `partition`, `shuffle`
+- **Object**: `cloneDeep`, `pick`, `omit`, `isEqual`, `merge`
+- **Function**: `debounce`, `throttle`, `once`, `memoize`
+- **Math**: `random`, `sample`, `mean`, `sum`
+
 ### Import Aliases
 
 **ALWAYS use @app alias for imports - NEVER use relative paths:**
 
 ```jsx
 // ✅ CORRECT - @app alias
+import { useGameStore } from '@app/stores'
+import { cloneDeep } from 'es-toolkit'
 import SudokuApp from '@app/components/SudokuApp'
-import { GameState } from '@app/patterns/GameState'
-import { useSudokuGame } from '@app/hooks/useSudokuGame'
 
 // ❌ WRONG - relative paths
-import SudokuApp from '../components/SudokuApp'
-import { GameState } from '../../patterns/GameState'
+import { useGameStore } from '../stores/gameStore'
+import { cloneDeep } from '../../utils/objectUtils'
 ```
 
 **@app alias configuration:**
@@ -257,6 +347,97 @@ import { GameState } from '../../patterns/GameState'
 # Development Rules
 
 **Always check official documentation and source before using any configuration - memorize correct patterns in this MD file to avoid repeated mistakes.**
+
+## SOLID Principles Implementation
+
+**This codebase follows SOLID principles - CRITICAL for maintainability:**
+
+### ✅ Single Responsibility Principle (SRP)
+- Each store has ONE clear responsibility
+- `gameStore` → Game state and logic only
+- `uiStore` → UI state and selections only  
+- `settingsStore` → User preferences only
+- Components focus on rendering, stores handle state
+
+### ✅ Open/Closed Principle (OCP)
+- Use interfaces for extensibility
+- Zustand stores are open for extension, closed for modification
+- New game modes can be added without changing existing code
+
+### ✅ Dependency Inversion Principle (DIP)
+- Depend on abstractions (Zustand stores) not concrete implementations
+- Use dependency injection via custom hooks
+- Services implement interfaces, not direct dependencies
+
+**Example SOLID-compliant code:**
+```tsx
+// ✅ CORRECT - SOLID principles
+import { useGameStore, useUIStore } from '@app/stores'
+
+const SudokuApp = () => {
+  const { gameState, handleCellInput } = useGameStore()
+  const { selectedCell, handleCellSelection } = useUIStore()
+  
+  // Component focuses on UI only, stores handle state
+  return (
+    <SudokuBoard 
+      gameState={gameState}
+      onCellClick={(row, col) => handleCellSelection(row, col, gameState?.board[row][col])}
+    />
+  )
+}
+```
+
+## Architectural Guidelines
+
+### State Management Rules
+1. **Zustand for ALL complex state** - Never use useState for game/app state
+2. **Immer middleware** for immutable updates - No manual spreading
+3. **Persist middleware** for localStorage - Automatic persistence
+4. **Devtools middleware** for debugging - Always enabled in development
+
+### Utility Function Rules  
+1. **es-toolkit FIRST** - Check if function exists before implementing
+2. **usehooks-ts FIRST** - Check if hook exists before implementing
+3. **NO custom implementations** for common patterns (arrays, objects, timing, storage)
+4. **Type-safe utilities** - Always use TypeScript with proper typing
+
+### Component Design Rules
+1. **SOLID principles** - Single responsibility, dependency injection
+2. **Tailwind ONLY** - NO inline styles ever (`style={}` forbidden)
+3. **Motion animations** - For game-like feel and smooth transitions
+4. **Responsive design** - Mobile-first with useMediaQuery/useWindowSize
+5. **Accessibility** - Proper ARIA labels, keyboard navigation
+
+### Performance Rules
+1. **React Compiler** - Automatic optimization, avoid manual memo unless needed
+2. **Build-first development** - Test with `pnpm build` not dev server
+3. **Bundle size monitoring** - Keep additions minimal and justified
+4. **Tree-shaking** - Import only what you need from libraries
+
+### Code Quality Rules
+1. **TypeScript strict mode** - No `any` types unless absolutely necessary
+2. **ESLint + Prettier** - Auto-fix on save, never commit unformatted code
+3. **@app alias imports** - Never use relative paths (`../../../`)
+4. **Clean interfaces** - Well-defined contracts between components/services
+
+### Git Workflow Rules
+1. **NO AI attribution** in commit messages - Professional commits only
+2. **Descriptive commits** - Explain WHY not just WHAT
+3. **Test before commit** - `pnpm build` must pass
+4. **Clean history** - No WIP commits in main branch
+
+### Documentation Rules
+1. **Update CLAUDE.md** when adding new patterns or rules
+2. **Code comments** only when business logic is complex
+3. **Interface documentation** - Clear parameter and return types
+4. **README updates** - When major features are added
+
+### Debugging Best Practices
+1. **Systematic testing** - Test in multiple scenarios/devices
+2. **Zustand devtools** - Use for state debugging
+3. **Console logs** - Remove after debugging, use proper logging levels
+4. **Error boundaries** - Proper error handling in React components
 
 ## Notes Feature Debug Experience
 
@@ -332,6 +513,7 @@ experimental: {
 - **Deploy Command**: `pnpm deploy` builds and adds `.nojekyll` file
 
 **GitHub Pages Setup:**
+
 1. Repository Settings → Pages → Source: "GitHub Actions"
 2. Push to main branch triggers automatic deployment
 3. Site available at: `https://username.github.io/repository-name`
@@ -356,6 +538,7 @@ git commit -m "Fix undo system bug where board didn't update visually
 ```
 
 **Commit message format:**
+
 - Clear, descriptive title (50 chars max)
 - Blank line
 - Detailed bullet points if needed

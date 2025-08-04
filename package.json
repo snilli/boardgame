@@ -17,11 +17,15 @@
 		"@visx/scale": "^3.12.0",
 		"@visx/shape": "^3.12.0",
 		"clsx": "^2.1.1",
+		"es-toolkit": "^1.39.8",
+		"immer": "^10.1.1",
 		"motion": "^12.23.12",
 		"next": "^15.4.5",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
-		"tailwind-merge": "^3.3.1"
+		"tailwind-merge": "^3.3.1",
+		"usehooks-ts": "^3.1.1",
+		"zustand": "^5.0.7"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.1",
