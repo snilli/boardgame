@@ -9,7 +9,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm build` - Build for production and test if everything works (includes TypeScript compilation and React Compiler)
 - `pnpm lint` - Run ESLint with auto-fix and format with Prettier (fixes code issues automatically)
 
-**Note**: We don't use `pnpm dev` - we test everything with `pnpm build` instead.
+**IMPORTANT**: After making any code changes, ALWAYS run both commands:
+1. `pnpm build` - To verify everything compiles and builds correctly
+2. `pnpm lint` - To fix code style issues and format all files
+
+**Note**: We don't use `pnpm dev` - we test everything with `pnpm build` then `pnpm lint` when finished.
 
 ### Package Management
 
@@ -248,11 +252,13 @@ const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | 
 ```
 
 **Zustand Store Structure:**
+
 - `src/stores/gameStore.ts` - Game state, actions, undo/redo
 - `src/stores/uiStore.ts` - UI state, selections, modals
 - `src/stores/settingsStore.ts` - User preferences with localStorage persistence
 
 **Store Features:**
+
 - **Immer middleware** for immutable updates
 - **Persist middleware** for localStorage persistence
 - **Devtools middleware** for debugging
@@ -273,12 +279,13 @@ const [debouncedValue] = useDebounceValue(inputValue, 500)
 
 // ❌ WRONG - Custom implementation
 const [settings, setSettings] = useState(() => {
-  const saved = localStorage.getItem('game-settings')
-  return saved ? JSON.parse(saved) : defaultSettings
+	const saved = localStorage.getItem('game-settings')
+	return saved ? JSON.parse(saved) : defaultSettings
 })
 ```
 
 **Available usehooks-ts hooks:**
+
 - `useLocalStorage` / `useSessionStorage` - Persistent storage
 - `useInterval` / `useTimeout` - Timing hooks
 - `useDebounceValue` / `useDebounceCallback` - Debouncing
@@ -301,11 +308,12 @@ const cloned = cloneDeep(complexObject)
 // ❌ WRONG - Custom implementation
 const chunks = []
 for (let i = 0; i < array.length; i += 3) {
-  chunks.push(array.slice(i, i + 3))
+	chunks.push(array.slice(i, i + 3))
 }
 ```
 
 **Available es-toolkit functions:**
+
 - **Array**: `chunk`, `flatten`, `uniq`, `groupBy`, `partition`, `shuffle`
 - **Object**: `cloneDeep`, `pick`, `omit`, `isEqual`, `merge`
 - **Function**: `debounce`, `throttle`, `once`, `memoize`
@@ -353,56 +361,63 @@ import { cloneDeep } from '../../utils/objectUtils'
 **This codebase follows SOLID principles - CRITICAL for maintainability:**
 
 ### ✅ Single Responsibility Principle (SRP)
+
 - Each store has ONE clear responsibility
 - `gameStore` → Game state and logic only
-- `uiStore` → UI state and selections only  
+- `uiStore` → UI state and selections only
 - `settingsStore` → User preferences only
 - Components focus on rendering, stores handle state
 
 ### ✅ Open/Closed Principle (OCP)
+
 - Use interfaces for extensibility
 - Zustand stores are open for extension, closed for modification
 - New game modes can be added without changing existing code
 
 ### ✅ Dependency Inversion Principle (DIP)
+
 - Depend on abstractions (Zustand stores) not concrete implementations
 - Use dependency injection via custom hooks
 - Services implement interfaces, not direct dependencies
 
 **Example SOLID-compliant code:**
+
 ```tsx
 // ✅ CORRECT - SOLID principles
 import { useGameStore, useUIStore } from '@app/stores'
 
 const SudokuApp = () => {
-  const { gameState, handleCellInput } = useGameStore()
-  const { selectedCell, handleCellSelection } = useUIStore()
-  
-  // Component focuses on UI only, stores handle state
-  return (
-    <SudokuBoard 
-      gameState={gameState}
-      onCellClick={(row, col) => handleCellSelection(row, col, gameState?.board[row][col])}
-    />
-  )
+	const { gameState, handleCellInput } = useGameStore()
+	const { selectedCell, handleCellSelection } = useUIStore()
+
+	// Component focuses on UI only, stores handle state
+	return (
+		<SudokuBoard
+			gameState={gameState}
+			onCellClick={(row, col) => handleCellSelection(row, col, gameState?.board[row][col])}
+		/>
+	)
 }
 ```
 
 ## Architectural Guidelines
 
 ### State Management Rules
+
 1. **Zustand for ALL complex state** - Never use useState for game/app state
 2. **Immer middleware** for immutable updates - No manual spreading
 3. **Persist middleware** for localStorage - Automatic persistence
 4. **Devtools middleware** for debugging - Always enabled in development
 
-### Utility Function Rules  
+### Utility Function Rules
+
 1. **es-toolkit FIRST** - Check if function exists before implementing
 2. **usehooks-ts FIRST** - Check if hook exists before implementing
 3. **NO custom implementations** for common patterns (arrays, objects, timing, storage)
 4. **Type-safe utilities** - Always use TypeScript with proper typing
 
 ### Component Design Rules
+
 1. **SOLID principles** - Single responsibility, dependency injection
 2. **Tailwind ONLY** - NO inline styles ever (`style={}` forbidden)
 3. **Motion animations** - For game-like feel and smooth transitions
@@ -410,30 +425,35 @@ const SudokuApp = () => {
 5. **Accessibility** - Proper ARIA labels, keyboard navigation
 
 ### Performance Rules
+
 1. **React Compiler** - Automatic optimization, avoid manual memo unless needed
 2. **Build-first development** - Test with `pnpm build` not dev server
 3. **Bundle size monitoring** - Keep additions minimal and justified
 4. **Tree-shaking** - Import only what you need from libraries
 
 ### Code Quality Rules
+
 1. **TypeScript strict mode** - No `any` types unless absolutely necessary
 2. **ESLint + Prettier** - Auto-fix on save, never commit unformatted code
 3. **@app alias imports** - Never use relative paths (`../../../`)
 4. **Clean interfaces** - Well-defined contracts between components/services
 
 ### Git Workflow Rules
+
 1. **NO AI attribution** in commit messages - Professional commits only
 2. **Descriptive commits** - Explain WHY not just WHAT
 3. **Test before commit** - `pnpm build` must pass
 4. **Clean history** - No WIP commits in main branch
 
 ### Documentation Rules
+
 1. **Update CLAUDE.md** when adding new patterns or rules
 2. **Code comments** only when business logic is complex
 3. **Interface documentation** - Clear parameter and return types
 4. **README updates** - When major features are added
 
 ### Debugging Best Practices
+
 1. **Systematic testing** - Test in multiple scenarios/devices
 2. **Zustand devtools** - Use for state debugging
 3. **Console logs** - Remove after debugging, use proper logging levels

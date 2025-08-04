@@ -18,7 +18,7 @@ interface SettingsState extends GameSettings {
 	// Actions
 	updateSetting: <K extends keyof GameSettings>(key: K, value: GameSettings[K]) => void
 	resetSettings: () => void
-	
+
 	// Specific setters for convenience
 	setDifficulty: (difficulty: string) => void
 	toggleSound: () => void
@@ -38,7 +38,7 @@ const defaultSettings: GameSettings = {
 	showTimer: true,
 	showErrors: true,
 	theme: 'auto',
-	language: 'en'
+	language: 'en',
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -109,12 +109,12 @@ export const useSettingsStore = create<SettingsState>()(
 					set((state) => {
 						state.language = language
 					})
-				}
+				},
 			})),
 			{
-				name: 'sudoku-settings-store'
-			}
+				name: 'sudoku-settings-store',
+			},
 		),
-		{ name: 'SettingsStore' }
-	)
+		{ name: 'SettingsStore' },
+	),
 )

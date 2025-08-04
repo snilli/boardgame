@@ -9,19 +9,12 @@ interface UseAutoSaveProps {
 	delay?: number
 }
 
-export const useAutoSave = ({ 
-	gameState, 
-	enabled = true, 
-	delay = 2000 
-}: UseAutoSaveProps) => {
+export const useAutoSave = ({ gameState, enabled = true, delay = 2000 }: UseAutoSaveProps) => {
 	// Debounce game state to avoid too frequent saves
 	const [debouncedGameState] = useDebounceValue(gameState, delay)
-	
+
 	// Store auto-saved game in localStorage
-	const [autoSavedGame, setAutoSavedGame] = useLocalStorage<SudokuGameState | null>(
-		'sudoku-auto-save',
-		null
-	)
+	const [autoSavedGame, setAutoSavedGame] = useLocalStorage<SudokuGameState | null>('sudoku-auto-save', null)
 
 	// Auto-save when debounced state changes
 	useEffect(() => {
@@ -39,6 +32,6 @@ export const useAutoSave = ({
 	return {
 		autoSavedGame,
 		hasAutoSave,
-		clearAutoSave
+		clearAutoSave,
 	}
 }

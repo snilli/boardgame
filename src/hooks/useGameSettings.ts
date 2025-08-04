@@ -18,19 +18,16 @@ const defaultSettings: GameSettings = {
 	autoNotesEnabled: false,
 	showTimer: true,
 	showErrors: true,
-	theme: 'auto'
+	theme: 'auto',
 }
 
 export const useGameSettings = () => {
 	const [settings, setSettings] = useLocalStorage('sudoku-game-settings', defaultSettings)
 
-	const updateSetting = <K extends keyof GameSettings>(
-		key: K,
-		value: GameSettings[K]
-	) => {
-		setSettings(prev => ({
+	const updateSetting = <K extends keyof GameSettings>(key: K, value: GameSettings[K]) => {
+		setSettings((prev) => ({
 			...prev,
-			[key]: value
+			[key]: value,
 		}))
 	}
 
@@ -42,6 +39,6 @@ export const useGameSettings = () => {
 		settings,
 		setSettings,
 		updateSetting,
-		resetSettings
+		resetSettings,
 	}
 }

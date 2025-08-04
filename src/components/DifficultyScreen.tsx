@@ -7,7 +7,6 @@ interface DifficultyScreenProps {
 	onBack: () => void
 }
 
-
 const difficulties = [
 	{
 		name: 'Easy',
@@ -49,20 +48,20 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 						key={num}
 						className="absolute text-6xl font-bold text-white/8"
 						style={{
-							left: `${FLOATING_POSITIONS.LEFT_OFFSET + (index * FLOATING_POSITIONS.HORIZONTAL_SPACING)}%`,
+							left: `${FLOATING_POSITIONS.LEFT_OFFSET + index * FLOATING_POSITIONS.HORIZONTAL_SPACING}%`,
 							top: `${FLOATING_POSITIONS.TOP_OFFSET + (index % 2) * FLOATING_POSITIONS.VERTICAL_SPACING}%`,
 							willChange: 'transform, opacity',
 							transform: 'translate3d(0, 0, 0)',
 						}}
 						animate={{
 							y: [-12, 12, -12],
-							opacity: [0.08, 0.15, 0.08]
+							opacity: [0.08, 0.15, 0.08],
 						}}
 						transition={{
 							duration: 8 + index * 1.5,
 							repeat: Infinity,
-							ease: "easeInOut",
-							type: "tween"
+							ease: 'easeInOut',
+							type: 'tween',
 						}}
 					>
 						{num}
@@ -76,20 +75,20 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 
 				{/* GPU-Accelerated Glowing Orbs */}
 				<motion.div
-					className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-3xl"
+					className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-3xl"
 					style={{
 						willChange: 'transform, opacity',
 						transform: 'translate3d(0, 0, 0)',
 					}}
 					animate={{
 						scale: [1, 1.1, 1],
-						opacity: [0.2, 0.35, 0.2]
+						opacity: [0.2, 0.35, 0.2],
 					}}
 					transition={{
 						duration: 12,
 						repeat: Infinity,
-						ease: "easeInOut",
-						type: "tween"
+						ease: 'easeInOut',
+						type: 'tween',
 					}}
 				/>
 				<motion.div
@@ -100,13 +99,13 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 					}}
 					animate={{
 						scale: [1.1, 1, 1.1],
-						opacity: [0.35, 0.2, 0.35]
+						opacity: [0.35, 0.2, 0.35],
 					}}
 					transition={{
 						duration: 10,
 						repeat: Infinity,
-						ease: "easeInOut",
-						type: "tween"
+						ease: 'easeInOut',
+						type: 'tween',
 					}}
 				/>
 			</div>
@@ -119,20 +118,20 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 						className="mb-16"
 						initial={{ opacity: 0, y: -30 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ 
-							duration: 0.6, 
-							ease: "easeOut",
-							type: "tween"
+						transition={{
+							duration: 0.6,
+							ease: 'easeOut',
+							type: 'tween',
 						}}
 					>
 						<motion.h1
 							className="mb-4 text-6xl font-black tracking-wider text-white drop-shadow-2xl md:text-7xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
-							transition={{ 
-								delay: 0.2, 
+							transition={{
+								delay: 0.2,
 								duration: 0.5,
-								type: "tween"
+								type: 'tween',
 							}}
 						>
 							Choose Your
@@ -141,10 +140,10 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 							className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-5xl font-black text-transparent drop-shadow-lg md:text-6xl"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
-							transition={{ 
-								delay: 0.4, 
+							transition={{
+								delay: 0.4,
 								duration: 0.5,
-								type: "tween"
+								type: 'tween',
 							}}
 						>
 							Challenge
@@ -156,10 +155,10 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 						className="mb-16 grid gap-8 md:grid-cols-3"
 						initial={{ opacity: 0, y: 30 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ 
-							delay: 0.6, 
+						transition={{
+							delay: 0.6,
 							duration: 0.5,
-							type: "tween"
+							type: 'tween',
 						}}
 					>
 						{difficulties.map((diff, index) => (
@@ -168,28 +167,28 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 								className="group relative"
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
-								transition={{ 
-									delay: 0.8 + index * 0.1, 
+								transition={{
+									delay: 0.8 + index * 0.1,
 									duration: 0.3,
-									type: "tween"
+									type: 'tween',
 								}}
-								whileHover={{ 
+								whileHover={{
 									scale: 1.03,
-									transition: { 
+									transition: {
 										duration: 0.15,
-										type: "tween"
-									}
+										type: 'tween',
+									},
 								}}
-								whileTap={{ 
+								whileTap={{
 									scale: 0.97,
-									transition: { 
+									transition: {
 										duration: 0.1,
-										type: "tween"
-									}
+										type: 'tween',
+									},
 								}}
 								style={{
 									willChange: 'transform',
-									transform: 'translate3d(0, 0, 0)'
+									transform: 'translate3d(0, 0, 0)',
 								}}
 							>
 								<button
@@ -198,8 +197,8 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 										'group relative w-full overflow-hidden rounded-3xl border-2 border-white/20 p-8 text-white shadow-2xl transition-all duration-200',
 										'bg-gradient-to-br backdrop-blur-sm',
 										diff.gradient,
-										'hover:border-white/30 hover:shadow-3xl',
-										'focus:outline-none focus:ring-4 focus:ring-white/30'
+										'hover:shadow-3xl hover:border-white/30',
+										'focus:ring-4 focus:ring-white/30 focus:outline-none',
 									)}
 								>
 									{/* Background Pattern */}
@@ -221,24 +220,20 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 										</h3>
 
 										{/* Description */}
-										<p className="mb-4 text-xl font-semibold text-white/90">
-											{diff.description}
-										</p>
+										<p className="mb-4 text-xl font-semibold text-white/90">{diff.description}</p>
 
 										{/* Clues Info */}
 										<div className="rounded-full border border-white/20 bg-white/10 px-6 py-3 backdrop-blur-sm">
-											<p className="text-lg font-bold text-white/90">
-												{diff.clues}
-											</p>
+											<p className="text-lg font-bold text-white/90">{diff.clues}</p>
 										</div>
 									</div>
 
 									{/* Optimized Hover Effect */}
-									<div 
+									<div
 										className="absolute inset-0 rounded-3xl bg-white/5 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 										style={{
 											willChange: 'opacity',
-											transform: 'translate3d(0, 0, 0)'
+											transform: 'translate3d(0, 0, 0)',
 										}}
 									/>
 								</button>
@@ -249,44 +244,44 @@ export default function DifficultyScreen({ onSelectDifficulty, onBack }: Difficu
 					{/* Back Button - GPU optimized */}
 					<motion.button
 						onClick={onBack}
-						className="group relative overflow-hidden rounded-2xl border-2 border-white/30 bg-white/10 px-12 py-4 text-xl font-bold text-white shadow-2xl backdrop-blur-sm transition-all duration-200 hover:border-white/40 hover:bg-white/15 hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-white/30"
+						className="group hover:shadow-3xl relative overflow-hidden rounded-2xl border-2 border-white/30 bg-white/10 px-12 py-4 text-xl font-bold text-white shadow-2xl backdrop-blur-sm transition-all duration-200 hover:border-white/40 hover:bg-white/15 focus:ring-4 focus:ring-white/30 focus:outline-none"
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ 
-							delay: 1.2, 
+						transition={{
+							delay: 1.2,
 							duration: 0.4,
-							type: "tween"
+							type: 'tween',
 						}}
-						whileHover={{ 
+						whileHover={{
 							scale: 1.02,
-							transition: { 
+							transition: {
 								duration: 0.15,
-								type: "tween"
-							}
+								type: 'tween',
+							},
 						}}
-						whileTap={{ 
+						whileTap={{
 							scale: 0.98,
-							transition: { 
+							transition: {
 								duration: 0.1,
-								type: "tween"
-							}
+								type: 'tween',
+							},
 						}}
 						style={{
 							willChange: 'transform',
-							transform: 'translate3d(0, 0, 0)'
+							transform: 'translate3d(0, 0, 0)',
 						}}
 					>
 						<span className="relative z-10 flex items-center gap-3">
 							<span className="text-2xl">←</span>
 							<span>Back to Menu</span>
 						</span>
-						
+
 						{/* Optimized Hover Effect */}
-						<div 
+						<div
 							className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 							style={{
 								willChange: 'opacity',
-								transform: 'translate3d(0, 0, 0)'
+								transform: 'translate3d(0, 0, 0)',
 							}}
 						/>
 					</motion.button>

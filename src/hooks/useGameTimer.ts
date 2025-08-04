@@ -10,11 +10,8 @@ interface UseGameTimerProps {
 export function useGameTimer({ startTime, endTime, isPaused }: UseGameTimerProps) {
 	const [currentTime, setCurrentTime] = useState(Date.now())
 
-	// Use usehooks-ts useInterval - clean and simple!
-	useInterval(
-		() => setCurrentTime(Date.now()),
-		isPaused || endTime ? null : 1000
-	)
+	// Update timer every second regardless of game state
+	useInterval(() => setCurrentTime(Date.now()), 1000)
 
 	const getElapsedTime = () => {
 		const endTimeToUse = endTime || currentTime

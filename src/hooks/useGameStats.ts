@@ -27,30 +27,30 @@ const defaultStats: GameStats = {
 		easy: null,
 		medium: null,
 		hard: null,
-		expert: null
+		expert: null,
 	},
 	totalPlayTime: 0,
 	averageCompletionTime: 0,
 	streaks: {
 		current: 0,
-		best: 0
+		best: 0,
 	},
 	hintsUsed: 0,
-	errorsCount: 0
+	errorsCount: 0,
 }
 
 export const useGameStats = () => {
 	const [stats, setStats] = useLocalStorage('sudoku-game-stats', defaultStats)
 
 	const recordGameStart = () => {
-		setStats(prev => ({
+		setStats((prev) => ({
 			...prev,
-			gamesPlayed: prev.gamesPlayed + 1
+			gamesPlayed: prev.gamesPlayed + 1,
 		}))
 	}
 
 	const recordGameCompleted = (difficulty: string, completionTime: number) => {
-		setStats(prev => {
+		setStats((prev) => {
 			const difficultyKey = difficulty.toLowerCase() as keyof typeof prev.bestTimes
 			const currentBest = prev.bestTimes[difficultyKey]
 			const isNewBest = !currentBest || completionTime < currentBest
@@ -60,29 +60,29 @@ export const useGameStats = () => {
 				gamesCompleted: prev.gamesCompleted + 1,
 				bestTimes: {
 					...prev.bestTimes,
-					[difficultyKey]: isNewBest ? completionTime : currentBest
+					[difficultyKey]: isNewBest ? completionTime : currentBest,
 				},
 				totalPlayTime: prev.totalPlayTime + completionTime,
 				averageCompletionTime: (prev.totalPlayTime + completionTime) / (prev.gamesCompleted + 1),
 				streaks: {
 					current: prev.streaks.current + 1,
-					best: Math.max(prev.streaks.best, prev.streaks.current + 1)
-				}
+					best: Math.max(prev.streaks.best, prev.streaks.current + 1),
+				},
 			}
 		})
 	}
 
 	const recordError = () => {
-		setStats(prev => ({
+		setStats((prev) => ({
 			...prev,
-			errorsCount: prev.errorsCount + 1
+			errorsCount: prev.errorsCount + 1,
 		}))
 	}
 
 	const recordHintUsed = () => {
-		setStats(prev => ({
+		setStats((prev) => ({
 			...prev,
-			hintsUsed: prev.hintsUsed + 1
+			hintsUsed: prev.hintsUsed + 1,
 		}))
 	}
 
@@ -113,6 +113,6 @@ export const useGameStats = () => {
 		recordHintUsed,
 		resetStats,
 		getCompletionRate,
-		formatTime
+		formatTime,
 	}
 }

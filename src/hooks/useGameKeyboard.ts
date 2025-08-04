@@ -16,33 +16,64 @@ export const useGameKeyboard = ({
 	onUndo,
 	onToggleNotes,
 	onPause,
-	enabled = true
+	enabled = true,
 }: UseGameKeyboardProps) => {
 	const handleKeyDown = (event: KeyboardEvent) => {
 		if (!enabled) return
 
 		const key = event.key
+		const code = event.code
+
+		// Map physical key positions to numbers (works with any keyboard layout)
+		const numberKeyMap: { [key: string]: number } = {
+			Digit1: 1,
+			Digit2: 2,
+			Digit3: 3,
+			Digit4: 4,
+			Digit5: 5,
+			Digit6: 6,
+			Digit7: 7,
+			Digit8: 8,
+			Digit9: 9,
+			// Numpad support
+			Numpad1: 1,
+			Numpad2: 2,
+			Numpad3: 3,
+			Numpad4: 4,
+			Numpad5: 5,
+			Numpad6: 6,
+			Numpad7: 7,
+			Numpad8: 8,
+			Numpad9: 9,
+		}
 
 		// Prevent default behavior for game keys
-		if (key >= '1' && key <= '9' || 
-			key === 'Backspace' || 
+		if (
+			numberKeyMap[code] ||
+			key === 'Backspace' ||
 			key === 'Delete' ||
 			key === ' ' ||
-			key === 'n' || key === 'N' ||
-			(key === 'z' && (event.ctrlKey || event.metaKey))) {
+			code === 'KeyN' ||
+			code === 'Digit0' ||
+			code === 'Numpad0' ||
+			(code === 'KeyZ' && (event.ctrlKey || event.metaKey))
+		) {
 			event.preventDefault()
 		}
 
 		// Handle different key inputs
 		if (key === ' ') {
 			onPause()
-		} else if (key === 'n' || key === 'N') {
+		} else if (code === 'KeyN') {
+			// Use physical 'N' key position regardless of language
 			onToggleNotes()
-		} else if (key >= '1' && key <= '9') {
-			onNumberInput(parseInt(key))
-		} else if (key === 'Backspace' || key === 'Delete' || key === '0') {
+		} else if (numberKeyMap[code]) {
+			// Use physical number key positions (1-9)
+			onNumberInput(numberKeyMap[code])
+		} else if (key === 'Backspace' || key === 'Delete' || code === 'Digit0' || code === 'Numpad0') {
 			onClearCell()
-		} else if (key === 'z' && (event.ctrlKey || event.metaKey)) {
+		} else if (code === 'KeyZ' && (event.ctrlKey || event.metaKey)) {
+			// Use physical 'Z' key position for undo
 			onUndo()
 		}
 	}

@@ -7,18 +7,18 @@ interface UIState {
 	// Selection state
 	selectedCell: { row: number; col: number } | null
 	highlightedNumber: number | null
-	
+
 	// UI modes
 	showSettings: boolean
 	showStats: boolean
 	showHints: boolean
-	
+
 	// Actions
 	setSelectedCell: (cell: { row: number; col: number } | null) => void
 	setHighlightedNumber: (number: number | null) => void
 	handleCellSelection: (row: number, col: number, currentValue: number) => void
 	clearSelection: () => void
-	
+
 	// UI toggles
 	toggleSettings: () => void
 	openSettings: () => void
@@ -29,7 +29,7 @@ interface UIState {
 	toggleHints: () => void
 	openHints: () => void
 	closeHints: () => void
-	
+
 	// Reset UI
 	resetUI: () => void
 }
@@ -143,8 +143,8 @@ export const useUIStore = create<UIState>()(
 					state.showStats = false
 					state.showHints = false
 				})
-			}
+			},
 		})),
-		{ name: 'UIStore' }
-	)
+		{ name: 'UIStore' },
+	),
 )

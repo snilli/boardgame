@@ -2,7 +2,7 @@
 import { useWindowSize, useMediaQuery } from 'usehooks-ts'
 
 export const useResponsiveGame = () => {
-	const { width, height } = useWindowSize()  
+	const { width, height } = useWindowSize()
 	const isMobile = useMediaQuery('(max-width: 768px)')
 	const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)')
 	const isDesktop = useMediaQuery('(min-width: 1025px)')
@@ -13,7 +13,7 @@ export const useResponsiveGame = () => {
 		if (!width || !height) return 400 // fallback
 
 		const maxSize = Math.min(width * 0.9, height * 0.7)
-		
+
 		if (isMobile) {
 			return Math.min(maxSize, 350)
 		} else if (isTablet) {
@@ -27,7 +27,7 @@ export const useResponsiveGame = () => {
 		if (isMobile && isPortrait) {
 			return 'mobile-portrait' // Stack vertically
 		} else if (isMobile && isLandscape) {
-			return 'mobile-landscape' // Side by side compressed  
+			return 'mobile-landscape' // Side by side compressed
 		} else if (isTablet) {
 			return 'tablet'
 		} else {
@@ -39,11 +39,11 @@ export const useResponsiveGame = () => {
 		width,
 		height,
 		isMobile,
-		isTablet, 
+		isTablet,
 		isDesktop,
 		isLandscape,
 		isPortrait,
 		boardSize: getBoardSize(),
-		gameLayout: getGameLayout()
+		gameLayout: getGameLayout(),
 	}
 }

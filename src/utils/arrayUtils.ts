@@ -10,11 +10,11 @@ export const create2DArray = (rows: number, cols: number, fill: any = null) => {
 }
 
 export const deepClone2DArray = <T>(arr: T[][]): T[][] => {
-	return arr.map(row => [...row])
+	return arr.map((row) => [...row])
 }
 
 export const countNonZero = (arr: number[]): number => {
-	return arr.filter(cell => cell !== 0).length
+	return arr.filter((cell) => cell !== 0).length
 }
 
 export const get3x3BoxIndex = (row: number, col: number): number => {
@@ -25,7 +25,7 @@ export const get3x3BoxCells = (boxIndex: number): Array<[number, number]> => {
 	const boxRow = Math.floor(boxIndex / 3) * 3
 	const boxCol = (boxIndex % 3) * 3
 	const cells: Array<[number, number]> = []
-	
+
 	for (let r = boxRow; r < boxRow + 3; r++) {
 		for (let c = boxCol; c < boxCol + 3; c++) {
 			cells.push([r, c])

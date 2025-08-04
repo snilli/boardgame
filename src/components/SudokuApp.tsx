@@ -23,15 +23,10 @@ export default function SudokuApp() {
 		pauseGame,
 		resumeGame,
 		undoMove,
-		resetGame
+		resetGame,
 	} = useGameStore()
 
-	const {
-		selectedCell,
-		highlightedNumber,
-		handleCellSelection,
-		clearSelection
-	} = useUIStore()
+	const { selectedCell, highlightedNumber, handleCellSelection, clearSelection } = useUIStore()
 
 	// Game Flow Handlers - Clean and focused
 	const handleStartGame = useCallback(() => {
@@ -127,7 +122,7 @@ export default function SudokuApp() {
 	}
 
 	return (
-		<div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 pb-20 md:pb-0">
+		<div className="relative min-h-screen w-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
 			{/* Same Background Elements as Start Screen */}
 			<div className="absolute inset-0">
 				{/* Floating Numbers */}
@@ -136,18 +131,18 @@ export default function SudokuApp() {
 						key={num}
 						className="absolute text-4xl font-bold text-white/5 md:text-6xl"
 						style={{
-							left: `${5 + (index * 11)}%`,
+							left: `${5 + index * 11}%`,
 							top: `${15 + (index % 4) * 25}%`,
 						}}
 						animate={{
 							y: [-15, 15, -15],
 							rotate: [-3, 3, -3],
-							opacity: [0.05, 0.1, 0.05]
+							opacity: [0.05, 0.1, 0.05],
 						}}
 						transition={{
 							duration: 6 + index * 0.3,
 							repeat: Infinity,
-							ease: "easeInOut"
+							ease: 'easeInOut',
 						}}
 					>
 						{num}
@@ -161,100 +156,99 @@ export default function SudokuApp() {
 
 				{/* Glowing Orbs */}
 				<motion.div
-					className="absolute left-1/6 top-1/6 h-48 w-48 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-3xl"
+					className="absolute top-1/6 left-1/6 h-48 w-48 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-3xl"
 					animate={{
 						scale: [1, 1.1, 1],
-						opacity: [0.2, 0.4, 0.2]
+						opacity: [0.2, 0.4, 0.2],
 					}}
 					transition={{
 						duration: 10,
 						repeat: Infinity,
-						ease: "easeInOut"
+						ease: 'easeInOut',
 					}}
 				/>
 				<motion.div
 					className="absolute right-1/6 bottom-1/6 h-32 w-32 rounded-full bg-gradient-to-r from-pink-400/20 to-orange-400/20 blur-3xl"
 					animate={{
 						scale: [1.1, 1, 1.1],
-						opacity: [0.4, 0.2, 0.4]
+						opacity: [0.4, 0.2, 0.4],
 					}}
 					transition={{
 						duration: 8,
 						repeat: Infinity,
-						ease: "easeInOut"
+						ease: 'easeInOut',
 					}}
 				/>
 			</div>
 
-			{/* Top Game Info Bar */}
-			<div className="relative z-10 flex items-center justify-between border-b border-white/10 bg-white/5 px-8 py-4 backdrop-blur-lg">
-				{/* Game Stats */}
-				<div className="flex items-center gap-8">
-					<div className="text-center">
-						<div className="text-2xl font-bold text-white">
-							{Math.floor((Date.now() - gameState.startTime) / 1000 / 60)}:
-							{(Math.floor((Date.now() - gameState.startTime) / 1000) % 60).toString().padStart(2, '0')}
+			{/* Navigation Bar - Fixed at top */}
+			<div className="fixed top-0 right-0 left-0 z-30 border-b border-white/10 bg-black/20 backdrop-blur-lg">
+				<div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
+					{/* Left: Game Title & Stats */}
+					<div className="flex items-center gap-6">
+						<div className="flex items-center gap-3">
+							<div className="text-2xl font-black text-white">SUDOKU</div>
+							<div className="h-6 w-px bg-white/20"></div>
+							<div className="text-lg font-bold text-blue-400">{gameState.difficultyName}</div>
 						</div>
-						<div className="text-xs text-white/60">TIME</div>
+						<div className="hidden items-center gap-2 sm:flex">
+							<div className="text-xl font-bold text-white">
+								{Math.floor((Date.now() - gameState.startTime) / 1000 / 60)}:
+								{(Math.floor((Date.now() - gameState.startTime) / 1000) % 60)
+									.toString()
+									.padStart(2, '0')}
+							</div>
+							<div className="text-sm text-white/60">TIME</div>
+						</div>
 					</div>
-					<div className="text-center">
-						<div className="text-2xl font-bold text-blue-400">{gameState.difficultyName}</div>
-						<div className="text-xs text-white/60">LEVEL</div>
-					</div>
-				</div>
 
-				{/* Action Buttons */}
-				<div className="flex gap-4">
-					<motion.button
-						onClick={handleToggleNoteMode}
-						className={cn(
-							'group relative overflow-hidden rounded-xl border border-white/20 px-6 py-3 text-sm font-bold backdrop-blur-sm transition-all duration-200',
-							gameState.noteMode 
-								? 'bg-blue-500/80 text-white border-blue-400/50' 
-								: 'bg-white/10 text-white/90 hover:bg-white/20',
-						)}
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-					>
-						<span className="relative z-10">📝 Notes</span>
-						{gameState.noteMode && (
-							<div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
-						)}
-					</motion.button>
-					<motion.button
-						onClick={undoMove}
-						className="group relative overflow-hidden rounded-xl border border-white/20 bg-purple-500/80 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-purple-600/80"
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-					>
-						<span className="relative z-10">↶ Undo</span>
-						<div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-					</motion.button>
-					<motion.button
-						onClick={handlePause}
-						className="group relative overflow-hidden rounded-xl border border-white/20 bg-amber-500/80 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-amber-600/80"
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-					>
-						<span className="relative z-10">⏸️ Pause</span>
-						<div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-					</motion.button>
-					<motion.button
-						onClick={handleNewGame}
-						className="group relative overflow-hidden rounded-xl border border-white/20 bg-red-500/80 px-6 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-red-600/80"
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-					>
-						<span className="relative z-10">🔄 New</span>
-						<div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-pink-500/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-					</motion.button>
+					{/* Right: Action Buttons */}
+					<div className="flex gap-2">
+						<motion.button
+							onClick={handleToggleNoteMode}
+							className={cn(
+								'group relative overflow-hidden rounded-lg border border-white/20 px-3 py-2 text-sm font-bold backdrop-blur-sm transition-all duration-200',
+								gameState.noteMode
+									? 'border-blue-400/50 bg-blue-500/80 text-white'
+									: 'bg-white/10 text-white/90 hover:bg-white/20',
+							)}
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<span className="relative z-10">📝</span>
+						</motion.button>
+						<motion.button
+							onClick={undoMove}
+							className="group relative overflow-hidden rounded-lg border border-white/20 bg-purple-500/80 px-3 py-2 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-purple-600/80"
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<span className="relative z-10">↶</span>
+						</motion.button>
+						<motion.button
+							onClick={handlePause}
+							className="group relative overflow-hidden rounded-lg border border-white/20 bg-amber-500/80 px-3 py-2 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-amber-600/80"
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<span className="relative z-10">⏸️</span>
+						</motion.button>
+						<motion.button
+							onClick={handleNewGame}
+							className="group relative overflow-hidden rounded-lg border border-white/20 bg-red-500/80 px-3 py-2 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-red-600/80"
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+						>
+							<span className="relative z-10">🔄</span>
+						</motion.button>
+					</div>
 				</div>
 			</div>
 
-			{/* Main Game Area */}
-			<div className="relative z-10 flex flex-1 items-center justify-center gap-4 p-4 md:gap-8 md:p-8">
-				{/* Game Board */}
-				<div className="max-w-2xl flex-1">
+			{/* Main Game Area - With top padding for nav */}
+			<div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 pt-20 pb-4">
+				{/* Game Board - Large and Centered */}
+				<div className="w-full max-w-2xl lg:max-w-3xl xl:max-w-4xl">
 					<SudokuBoard
 						gameState={gameState}
 						onCellClick={handleCellClick}
@@ -262,99 +256,99 @@ export default function SudokuApp() {
 						highlightedNumber={highlightedNumber}
 					/>
 				</div>
+			</div>
 
-				{/* Number Panel - Responsive */}
-				<div className="hidden md:block">
-					<div className="rounded-3xl border border-white/20 bg-white/5 p-4 shadow-2xl backdrop-blur-lg lg:p-6">
-						{/* Number Grid */}
-						<div className="mb-4 grid grid-cols-3 gap-2 lg:gap-3">
-							{SUDOKU_NUMBERS.map((num) => (
-								<motion.button
-									key={num}
-									onClick={() => handleNumberInput(num)}
-									className={cn(
-										'group relative h-12 w-12 cursor-pointer overflow-hidden rounded-xl border-2 text-lg font-bold transition-all duration-200 lg:h-14 lg:w-14 lg:text-xl',
-										highlightedNumber === num
-											? 'border-blue-400/50 bg-blue-500/80 text-white shadow-lg shadow-blue-500/30'
-											: 'border-white/20 bg-white/10 text-white hover:border-white/40 hover:bg-white/20',
-									)}
-									whileHover={{ scale: 1.05 }}
-									whileTap={{ scale: 0.95 }}
-								>
-									<span className="relative z-10">{num}</span>
-									{highlightedNumber === num && (
-										<div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20" />
-									)}
-									<div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-								</motion.button>
-							))}
-						</div>
+			{/* Desktop Number Panel - Right Side */}
+			<div className="fixed top-1/2 right-4 z-20 hidden -translate-y-1/2 xl:block">
+				<div className="rounded-3xl border border-white/20 bg-black/20 p-6 shadow-2xl backdrop-blur-lg">
+					{/* Number Grid */}
+					<div className="mb-4 grid grid-cols-3 gap-3">
+						{SUDOKU_NUMBERS.map((num) => (
+							<motion.button
+								key={num}
+								onClick={() => handleNumberInput(num)}
+								className={cn(
+									'group relative h-16 w-16 cursor-pointer overflow-hidden rounded-2xl border-2 text-2xl font-bold transition-all duration-200',
+									highlightedNumber === num
+										? 'border-blue-400/60 bg-blue-500/90 text-white shadow-lg shadow-blue-500/40'
+										: 'border-white/30 bg-white/15 text-white hover:border-white/50 hover:bg-white/25',
+								)}
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+							>
+								<span className="relative z-10">{num}</span>
+								{highlightedNumber === num && (
+									<div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30" />
+								)}
+								<div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+							</motion.button>
+						))}
+					</div>
 
+					{/* Clear Button */}
+					<motion.button
+						onClick={handleClearCellClick}
+						className="group relative w-full cursor-pointer overflow-hidden rounded-2xl border-2 border-red-400/50 bg-red-500/90 p-4 text-lg font-bold text-white transition-all duration-200 hover:bg-red-600/90"
+						whileHover={{ scale: 1.02 }}
+						whileTap={{ scale: 0.98 }}
+					>
+						<span className="relative z-10">🗑️ Clear</span>
+						<div className="absolute inset-0 bg-gradient-to-r from-red-600/30 to-pink-600/30 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+					</motion.button>
+				</div>
+			</div>
+
+			{/* Mobile Number Panel - Bottom Fixed */}
+			<div className="fixed right-0 bottom-0 left-0 z-20 border-t border-white/10 bg-black/30 backdrop-blur-lg xl:hidden">
+				<div className="mx-auto max-w-2xl p-4">
+					{/* Number Grid */}
+					<div className="grid grid-cols-5 gap-3">
+						{SUDOKU_NUMBERS.map((num) => (
+							<motion.button
+								key={num}
+								onClick={() => handleNumberInput(num)}
+								className={cn(
+									'h-14 cursor-pointer rounded-xl border-2 text-lg font-bold transition-all duration-200',
+									highlightedNumber === num
+										? 'border-blue-400/60 bg-blue-500/90 text-white shadow-md shadow-blue-500/30'
+										: 'border-white/30 bg-white/15 text-white hover:bg-white/25',
+								)}
+								whileTap={{ scale: 0.95 }}
+							>
+								{num}
+							</motion.button>
+						))}
 						{/* Clear Button */}
 						<motion.button
 							onClick={handleClearCellClick}
-							className="group relative w-full cursor-pointer overflow-hidden rounded-xl border border-white/20 bg-red-500/80 p-3 text-base font-bold text-white transition-all duration-200 hover:bg-red-600/80 lg:p-4 lg:text-lg"
-							whileHover={{ scale: 1.02 }}
-							whileTap={{ scale: 0.98 }}
+							className="h-14 cursor-pointer rounded-xl border-2 border-red-400/50 bg-red-500/90 text-lg font-bold text-white hover:bg-red-600/90"
+							whileTap={{ scale: 0.95 }}
 						>
-							<span className="relative z-10">🗑️ Clear</span>
-							<div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-pink-500/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+							🗑️
 						</motion.button>
-					</div>
-				</div>
-
-				{/* Mobile Number Panel - Bottom */}
-				<div className="fixed right-0 bottom-0 left-0 z-40 border-t border-white/10 bg-white/5 p-4 backdrop-blur-lg md:hidden">
-					<div className="mx-auto max-w-md">
-						{/* Number Grid */}
-						<div className="mb-3 grid grid-cols-5 gap-2">
-							{SUDOKU_NUMBERS.map((num) => (
-								<motion.button
-									key={num}
-									onClick={() => handleNumberInput(num)}
-									className={cn(
-										'h-10 cursor-pointer rounded-lg border text-sm font-bold transition-all duration-200',
-										highlightedNumber === num
-											? 'border-blue-400/50 bg-blue-500/80 text-white shadow-md'
-											: 'border-white/20 bg-white/10 text-white',
-									)}
-									whileTap={{ scale: 0.95 }}
-								>
-									{num}
-								</motion.button>
-							))}
-							{/* Clear Button */}
-							<motion.button
-								onClick={handleClearCellClick}
-								className="h-10 cursor-pointer rounded-lg border border-white/20 bg-red-500/80 text-sm font-bold text-white"
-								whileTap={{ scale: 0.95 }}
-							>
-								🗑️
-							</motion.button>
-						</div>
 					</div>
 				</div>
 			</div>
 
 			{/* Pause Modal */}
 			{gameMode === 'paused' && (
-				<motion.div 
+				<motion.div
 					className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: 0.3 }}
 				>
-					<motion.div 
+					<motion.div
 						className="relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-12 text-center shadow-2xl backdrop-blur-lg"
 						initial={{ scale: 0.8, opacity: 0 }}
 						animate={{ scale: 1, opacity: 1 }}
-						transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
+						transition={{ duration: 0.4, type: 'spring', stiffness: 300 }}
 					>
 						{/* Background Glow */}
 						<div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-xl" />
-						
+
 						<div className="relative z-10">
-							<motion.h2 
+							<motion.h2
 								className="mb-6 text-5xl font-black text-white drop-shadow-lg"
 								initial={{ y: -20, opacity: 0 }}
 								animate={{ y: 0, opacity: 1 }}
@@ -364,7 +358,7 @@ export default function SudokuApp() {
 							</motion.h2>
 							<motion.button
 								onClick={handlePause}
-								className="group relative overflow-hidden rounded-2xl border-2 border-white/30 bg-gradient-to-r from-blue-500 to-purple-600 px-12 py-6 text-2xl font-black text-white shadow-2xl transition-all duration-300 hover:border-white/50 hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-white/30"
+								className="group hover:shadow-3xl relative overflow-hidden rounded-2xl border-2 border-white/30 bg-gradient-to-r from-blue-500 to-purple-600 px-12 py-6 text-2xl font-black text-white shadow-2xl transition-all duration-300 hover:border-white/50 focus:ring-4 focus:ring-white/30 focus:outline-none"
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 								initial={{ y: 20, opacity: 0 }}
@@ -373,7 +367,7 @@ export default function SudokuApp() {
 							>
 								{/* Background Animation */}
 								<div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-								
+
 								<span className="relative z-10 flex items-center gap-3">
 									<span className="text-3xl">▶️</span>
 									<span>Resume Game</span>
@@ -389,23 +383,23 @@ export default function SudokuApp() {
 
 			{/* Victory Modal */}
 			{gameState.isCompleted && (
-				<motion.div 
+				<motion.div
 					className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ duration: 0.3 }}
 				>
-					<motion.div 
+					<motion.div
 						className="relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 p-12 text-center shadow-2xl backdrop-blur-lg"
 						initial={{ scale: 0.8, opacity: 0 }}
 						animate={{ scale: 1, opacity: 1 }}
-						transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
+						transition={{ duration: 0.4, type: 'spring', stiffness: 300 }}
 					>
 						{/* Background Glow */}
 						<div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 blur-xl" />
-						
+
 						<div className="relative z-10">
-							<motion.h2 
+							<motion.h2
 								className="mb-6 text-6xl font-black text-white drop-shadow-lg"
 								initial={{ y: -20, opacity: 0 }}
 								animate={{ y: 0, opacity: 1 }}
@@ -413,7 +407,7 @@ export default function SudokuApp() {
 							>
 								🎉 Victory!
 							</motion.h2>
-							<motion.p 
+							<motion.p
 								className="mb-8 text-2xl font-semibold text-white/90"
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
@@ -424,7 +418,7 @@ export default function SudokuApp() {
 									.toString()
 									.padStart(2, '0')}
 							</motion.p>
-							<motion.div 
+							<motion.div
 								className="flex justify-center gap-6"
 								initial={{ y: 20, opacity: 0 }}
 								animate={{ y: 0, opacity: 1 }}
@@ -432,13 +426,13 @@ export default function SudokuApp() {
 							>
 								<motion.button
 									onClick={handleNewGame}
-									className="group relative overflow-hidden rounded-2xl border-2 border-white/30 bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 text-xl font-black text-white shadow-2xl transition-all duration-300 hover:border-white/50 hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-white/30"
+									className="group hover:shadow-3xl relative overflow-hidden rounded-2xl border-2 border-white/30 bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 text-xl font-black text-white shadow-2xl transition-all duration-300 hover:border-white/50 focus:ring-4 focus:ring-white/30 focus:outline-none"
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 								>
 									{/* Background Animation */}
 									<div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-									
+
 									<span className="relative z-10 flex items-center gap-2">
 										<span>🔄</span>
 										<span>New Game</span>
@@ -449,13 +443,13 @@ export default function SudokuApp() {
 								</motion.button>
 								<motion.button
 									onClick={handleBackToStart}
-									className="group relative overflow-hidden rounded-2xl border-2 border-white/30 bg-white/10 px-8 py-4 text-xl font-black text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20 hover:shadow-3xl focus:outline-none focus:ring-4 focus:ring-white/30"
+									className="group hover:shadow-3xl relative overflow-hidden rounded-2xl border-2 border-white/30 bg-white/10 px-8 py-4 text-xl font-black text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20 focus:ring-4 focus:ring-white/30 focus:outline-none"
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 								>
 									{/* Background Animation */}
 									<div className="absolute inset-0 bg-gradient-to-r from-gray-500/20 to-slate-500/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-									
+
 									<span className="relative z-10 flex items-center gap-2">
 										<span>🏠</span>
 										<span>Menu</span>

@@ -27,18 +27,18 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 						key={num}
 						className="absolute text-6xl font-bold text-white/10"
 						style={{
-							left: `${10 + (index * 10)}%`,
+							left: `${10 + index * 10}%`,
 							top: `${20 + (index % 3) * 30}%`,
 						}}
 						animate={{
 							y: [-20, 20, -20],
 							rotate: [-5, 5, -5],
-							opacity: [0.1, 0.2, 0.1]
+							opacity: [0.1, 0.2, 0.1],
 						}}
 						transition={{
 							duration: 4 + index * 0.5,
 							repeat: Infinity,
-							ease: "easeInOut"
+							ease: 'easeInOut',
 						}}
 					>
 						{num}
@@ -52,27 +52,27 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 
 				{/* Glowing Orbs */}
 				<motion.div
-					className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-3xl"
+					className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-3xl"
 					animate={{
 						scale: [1, 1.2, 1],
-						opacity: [0.3, 0.6, 0.3]
+						opacity: [0.3, 0.6, 0.3],
 					}}
 					transition={{
 						duration: 8,
 						repeat: Infinity,
-						ease: "easeInOut"
+						ease: 'easeInOut',
 					}}
 				/>
 				<motion.div
 					className="absolute right-1/4 bottom-1/4 h-48 w-48 rounded-full bg-gradient-to-r from-pink-400/30 to-orange-400/30 blur-3xl"
 					animate={{
 						scale: [1.2, 1, 1.2],
-						opacity: [0.6, 0.3, 0.6]
+						opacity: [0.6, 0.3, 0.6],
 					}}
 					transition={{
 						duration: 6,
 						repeat: Infinity,
-						ease: "easeInOut"
+						ease: 'easeInOut',
 					}}
 				/>
 			</div>
@@ -85,19 +85,19 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 						className="mb-16"
 						initial={{ opacity: 0, y: -50 }}
 						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 1, ease: "easeOut" }}
+						transition={{ duration: 1, ease: 'easeOut' }}
 					>
 						{/* Sudoku Grid Icon */}
 						<motion.div
 							className="mb-8 flex justify-center"
 							initial={{ opacity: 0, scale: 0.5, rotateY: -180 }}
 							animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-							transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 100 }}
+							transition={{ delay: 0.3, duration: 1, type: 'spring', stiffness: 100 }}
 						>
 							<div className="relative">
 								{/* Main Grid */}
 								<div className="grid grid-cols-3 gap-2 rounded-2xl border-4 border-white/30 bg-white/10 p-4 backdrop-blur-sm">
-									{Array.from({length: 9}).map((_, i) => (
+									{Array.from({ length: 9 }).map((_, i) => (
 										<div
 											key={i}
 											className="flex h-8 w-8 items-center justify-center rounded bg-white/20 text-sm font-bold text-white"
@@ -106,7 +106,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 										</div>
 									))}
 								</div>
-								
+
 								{/* Glow Effect */}
 								<div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-400/20 to-purple-400/20 blur-xl" />
 							</div>
@@ -148,17 +148,17 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 								'group relative overflow-hidden rounded-2xl border-2 px-16 py-6 text-2xl font-black transition-all duration-300',
 								'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-2xl',
 								'border-white/30 hover:border-white/50',
-								'hover:shadow-blue-500/30 hover:shadow-3xl',
-								'focus:outline-none focus:ring-4 focus:ring-white/30',
-								'disabled:opacity-50 disabled:cursor-not-allowed',
-								!isAnimating && 'hover:scale-105 active:scale-95'
+								'hover:shadow-3xl hover:shadow-blue-500/30',
+								'focus:ring-4 focus:ring-white/30 focus:outline-none',
+								'disabled:cursor-not-allowed disabled:opacity-50',
+								!isAnimating && 'hover:scale-105 active:scale-95',
 							)}
 							whileHover={{ scale: isAnimating ? 1 : 1.05 }}
 							whileTap={{ scale: isAnimating ? 1 : 0.95 }}
 						>
 							{/* Background Animation */}
 							<div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-							
+
 							{/* Button Content */}
 							<span className="relative z-10 flex items-center gap-3">
 								{isAnimating ? (
@@ -166,7 +166,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 										<motion.div
 											className="h-6 w-6 rounded-full border-2 border-white border-t-transparent"
 											animate={{ rotate: 360 }}
-											transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+											transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
 										/>
 										<span>Starting Game...</span>
 									</>
@@ -193,7 +193,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 								{ icon: '🧠', text: 'Train Your Brain' },
 								{ icon: '🏆', text: 'Multiple Levels' },
 								{ icon: '💡', text: 'Smart Hints' },
-								{ icon: '📱', text: 'Mobile Friendly' }
+								{ icon: '📱', text: 'Mobile Friendly' },
 							].map((feature, index) => (
 								<motion.div
 									key={feature.text}
@@ -225,7 +225,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 					<span className="text-sm">Scroll to explore</span>
 					<motion.div
 						animate={{ y: [0, 8, 0] }}
-						transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+						transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
 					>
 						<span className="text-lg">↓</span>
 					</motion.div>

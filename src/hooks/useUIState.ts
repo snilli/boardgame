@@ -6,7 +6,7 @@ import type { GameMode } from '@app/domain/sudoku-game'
 // Custom useForceUpdate hook
 const useForceUpdate = () => {
 	const [, setTick] = useState(0)
-	return useCallback(() => setTick(tick => tick + 1), [])
+	return useCallback(() => setTick((tick) => tick + 1), [])
 }
 
 export const useUIState = () => {

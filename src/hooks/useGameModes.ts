@@ -4,29 +4,20 @@ import { useBoolean } from 'usehooks-ts'
 export const useGameModes = () => {
 	const {
 		value: noteMode,
-		setTrue: enableNoteMode, 
+		setTrue: enableNoteMode,
 		setFalse: disableNoteMode,
-		toggle: toggleNoteMode
+		toggle: toggleNoteMode,
 	} = useBoolean(false)
 
-	const {
-		value: isPaused,
-		setTrue: pauseGame,
-		setFalse: resumeGame, 
-		toggle: togglePause
-	} = useBoolean(false)
+	const { value: isPaused, setTrue: pauseGame, setFalse: resumeGame, toggle: togglePause } = useBoolean(false)
 
-	const {
-		value: isCompleted,
-		setTrue: completeGame,
-		setFalse: resetCompletion
-	} = useBoolean(false)
+	const { value: isCompleted, setTrue: completeGame, setFalse: resetCompletion } = useBoolean(false)
 
 	const {
 		value: showSettings,
 		setTrue: openSettings,
 		setFalse: closeSettings,
-		toggle: toggleSettings
+		toggle: toggleSettings,
 	} = useBoolean(false)
 
 	return {
@@ -35,22 +26,22 @@ export const useGameModes = () => {
 		enableNoteMode,
 		disableNoteMode,
 		toggleNoteMode,
-		
+
 		// Pause/Resume
 		isPaused,
 		pauseGame,
 		resumeGame,
 		togglePause,
-		
+
 		// Game completion
 		isCompleted,
 		completeGame,
 		resetCompletion,
-		
+
 		// Settings
 		showSettings,
 		openSettings,
 		closeSettings,
-		toggleSettings
+		toggleSettings,
 	}
 }

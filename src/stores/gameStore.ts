@@ -10,11 +10,11 @@ interface GameState {
 	// Current game data
 	gameState: SudokuGameState | null
 	gameMode: GameMode
-	
+
 	// History for undo
 	history: SudokuGameState[]
 	maxHistorySize: number
-	
+
 	// Actions
 	createNewGame: (difficulty: string) => void
 	setGameMode: (mode: GameMode) => void
@@ -152,9 +152,10 @@ export const useGameStore = create<GameState>()(
 
 							// Check completion
 							const isComplete = state.gameState.board.every((boardRow, rowIndex) =>
-								boardRow.every((cell, colIndex) => 
-									cell !== 0 && cell === state.gameState!.solution[rowIndex][colIndex]
-								)
+								boardRow.every(
+									(cell, colIndex) =>
+										cell !== 0 && cell === state.gameState!.solution[rowIndex][colIndex],
+								),
 							)
 
 							if (isComplete) {
@@ -175,7 +176,7 @@ export const useGameStore = create<GameState>()(
 
 					set((state) => {
 						if (!state.gameState) return
-						
+
 						state.gameState.board[row][col] = 0
 						const cellKey = `${row}-${col}`
 						delete state.gameState.errors[cellKey]
@@ -229,7 +230,7 @@ export const useGameStore = create<GameState>()(
 						const previousState = state.history.pop()
 						if (previousState) {
 							state.gameState = {
-								board: previousState.board.map(row => [...row]),
+								board: previousState.board.map((row) => [...row]),
 								initialBoard: previousState.initialBoard,
 								solution: previousState.solution,
 								notes: deepClone(previousState.notes),
@@ -240,7 +241,7 @@ export const useGameStore = create<GameState>()(
 								difficulty: previousState.difficulty,
 								difficultyName: previousState.difficultyName,
 								startTime: previousState.startTime,
-								endTime: previousState.endTime
+								endTime: previousState.endTime,
 							}
 						}
 					})
@@ -254,7 +255,7 @@ export const useGameStore = create<GameState>()(
 
 					set((state) => {
 						const stateCopy: SudokuGameState = {
-							board: gameState.board.map(row => [...row]),
+							board: gameState.board.map((row) => [...row]),
 							initialBoard: gameState.initialBoard,
 							solution: gameState.solution,
 							notes: { ...gameState.notes },
@@ -265,7 +266,7 @@ export const useGameStore = create<GameState>()(
 							difficulty: gameState.difficulty,
 							difficultyName: gameState.difficultyName,
 							startTime: gameState.startTime,
-							endTime: gameState.endTime
+							endTime: gameState.endTime,
 						}
 
 						state.history.push(stateCopy)
@@ -287,16 +288,16 @@ export const useGameStore = create<GameState>()(
 						state.gameMode = 'start'
 						state.history = []
 					})
-				}
+				},
 			})),
 			{
 				name: 'sudoku-game-store',
 				partialize: (state) => ({
 					gameState: state.gameState,
-					gameMode: state.gameMode
-				})
-			}
+					gameMode: state.gameMode,
+				}),
+			},
 		),
-		{ name: 'GameStore' }
-	)
+		{ name: 'GameStore' },
+	),
 )
