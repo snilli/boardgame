@@ -1,9 +1,9 @@
+import type { SudokuGameState } from '@app/domain/sudoku-game'
 import { localPoint } from '@visx/event'
 import { Group } from '@visx/group'
 import { ParentSize } from '@visx/responsive'
 import { scaleLinear } from '@visx/scale'
 import { memo, useCallback } from 'react'
-import type { SudokuGameState } from '@app/domain/sudoku-game'
 
 interface SudokuBoardProps {
 	gameState: SudokuGameState
@@ -167,7 +167,7 @@ const SudokuBoardInner: React.FC<SudokuBoardInnerProps> = ({
 												gameState.initialBoard[rowIndex][colIndex] !== 0 ? 'bold' : 'normal'
 											}
 											fill={getTextColor(rowIndex, colIndex)}
-											style={{ userSelect: 'none', pointerEvents: 'none' }}
+											className="select-none pointer-events-none"
 										>
 											{cell}
 										</text>
@@ -248,10 +248,7 @@ const SudokuBoardInner: React.FC<SudokuBoardInnerProps> = ({
 														fontSize={noteFontSize}
 														fill={noteColor}
 														fontWeight="bold"
-														style={{
-															userSelect: 'none',
-															pointerEvents: 'none',
-														}}
+														className="select-none pointer-events-none"
 													>
 														{value}
 													</text>,
@@ -326,21 +323,12 @@ const SudokuBoardInner: React.FC<SudokuBoardInnerProps> = ({
 const SudokuBoard = memo<SudokuBoardProps>(
 	({ gameState, onCellClick, selectedCell, highlightedNumber, maxWidth = 600, maxHeight = 600 }) => {
 		return (
-			<div
-				className="flex h-full w-full items-center justify-center"
-				style={{
-					maxWidth: `${maxWidth}px`,
-					maxHeight: `${maxHeight}px`,
-					aspectRatio: '1 / 1',
-					minHeight: '320px',
-					minWidth: '320px',
-				}}
-			>
+			<div className="flex aspect-square w-full items-center justify-center">
 				<ParentSize>
 					{({ width, height }) => {
-						// Calculate the size to maintain square aspect ratio with better utilization
+						// Use full container size for perfect centering
 						const containerSize = Math.min(width, height)
-						const size = Math.min(containerSize * 0.98, maxWidth, maxHeight) // Use 98% of container for better space utilization
+						const size = containerSize // Use full container size
 
 						return (
 							<SudokuBoardInner

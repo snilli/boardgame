@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { useState } from 'react'
 import { cn } from '@app/utils/cn'
 import { SUDOKU_NUMBERS } from '@app/constants/sudoku'
+import { PlayIcon, LightBulbIcon, TrophyIcon, DevicePhoneMobileIcon, CpuChipIcon } from '@heroicons/react/24/outline'
 
 interface GameStartScreenProps {
 	onStartGame: () => void
@@ -25,7 +26,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 				{SUDOKU_NUMBERS.map((num, index) => (
 					<motion.div
 						key={num}
-						className="absolute text-6xl font-bold text-white/10"
+						className="absolute text-3xl font-bold text-white/10 sm:text-4xl md:text-5xl lg:text-6xl"
 						style={{
 							left: `${10 + index * 10}%`,
 							top: `${20 + (index % 3) * 30}%`,
@@ -78,29 +79,29 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 			</div>
 
 			{/* Main Content */}
-			<div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+			<div className="relative z-10 flex min-h-screen items-center justify-center p-2 sm:p-4 md:p-6">
 				<div className="text-center">
 					{/* Logo/Title Section */}
 					<motion.div
-						className="mb-16"
+						className="mb-8 sm:mb-12 md:mb-16"
 						initial={{ opacity: 0, y: -50 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 1, ease: 'easeOut' }}
 					>
 						{/* Sudoku Grid Icon */}
 						<motion.div
-							className="mb-8 flex justify-center"
+							className="mb-4 flex justify-center sm:mb-6 md:mb-8"
 							initial={{ opacity: 0, scale: 0.5, rotateY: -180 }}
 							animate={{ opacity: 1, scale: 1, rotateY: 0 }}
 							transition={{ delay: 0.3, duration: 1, type: 'spring', stiffness: 100 }}
 						>
 							<div className="relative">
 								{/* Main Grid */}
-								<div className="grid grid-cols-3 gap-2 rounded-2xl border-4 border-white/30 bg-white/10 p-4 backdrop-blur-sm">
+								<div className="grid grid-cols-3 gap-1 rounded-xl border-2 border-white/30 bg-white/10 p-2 backdrop-blur-sm sm:gap-2 sm:rounded-2xl sm:border-4 sm:p-4">
 									{Array.from({ length: 9 }).map((_, i) => (
 										<div
 											key={i}
-											className="flex h-8 w-8 items-center justify-center rounded bg-white/20 text-sm font-bold text-white"
+											className="flex h-6 w-6 items-center justify-center rounded bg-white/20 text-xs font-bold text-white sm:h-8 sm:w-8 sm:text-sm"
 										>
 											{SUDOKU_NUMBERS[i]}
 										</div>
@@ -114,7 +115,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 
 						{/* Game Title */}
 						<motion.h1
-							className="mb-4 text-7xl font-black tracking-wider text-white drop-shadow-2xl md:text-8xl"
+							className="mb-2 text-4xl font-black tracking-wider text-white drop-shadow-2xl sm:mb-3 sm:text-5xl md:mb-4 md:text-6xl lg:text-7xl xl:text-8xl"
 							initial={{ opacity: 0, y: 30 }}
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ delay: 0.6, duration: 0.8 }}
@@ -124,7 +125,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 
 						{/* Subtitle */}
 						<motion.p
-							className="text-xl font-medium text-white/80 md:text-2xl"
+							className="text-base font-medium text-white/80 sm:text-lg md:text-xl lg:text-2xl"
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.9, duration: 0.8 }}
@@ -135,7 +136,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 
 					{/* Action Section */}
 					<motion.div
-						className="space-y-6"
+						className="space-y-4 sm:space-y-6"
 						initial={{ opacity: 0, y: 50 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: 1.2, duration: 0.8 }}
@@ -145,7 +146,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 							onClick={handleStartClick}
 							disabled={isAnimating}
 							className={cn(
-								'group relative overflow-hidden rounded-2xl border-2 px-16 py-6 text-2xl font-black transition-all duration-300',
+								'group relative overflow-hidden rounded-xl border-2 px-8 py-4 text-lg font-black transition-all duration-300 sm:rounded-2xl sm:px-12 sm:py-5 sm:text-xl md:px-16 md:py-6 md:text-2xl',
 								'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-2xl',
 								'border-white/30 hover:border-white/50',
 								'hover:shadow-3xl hover:shadow-blue-500/30',
@@ -172,7 +173,7 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 									</>
 								) : (
 									<>
-										<span className="text-3xl">🎮</span>
+										<PlayIcon className="h-6 w-6 sm:h-7 sm:w-7" />
 										<span>Start Playing</span>
 									</>
 								)}
@@ -184,27 +185,27 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 
 						{/* Feature Pills */}
 						<motion.div
-							className="flex flex-wrap items-center justify-center gap-4"
+							className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4"
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 1.5, duration: 0.8 }}
 						>
 							{[
-								{ icon: '🧠', text: 'Train Your Brain' },
-								{ icon: '🏆', text: 'Multiple Levels' },
-								{ icon: '💡', text: 'Smart Hints' },
-								{ icon: '📱', text: 'Mobile Friendly' },
+								{ Icon: CpuChipIcon, text: 'Train Your Brain' },
+								{ Icon: TrophyIcon, text: 'Multiple Levels' },
+								{ Icon: LightBulbIcon, text: 'Smart Hints' },
+								{ Icon: DevicePhoneMobileIcon, text: 'Mobile Friendly' },
 							].map((feature, index) => (
 								<motion.div
 									key={feature.text}
-									className="rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-sm"
+									className="rounded-full border border-white/20 bg-white/10 px-2 py-1 backdrop-blur-sm sm:px-3 sm:py-2 md:px-4"
 									initial={{ opacity: 0, scale: 0.8 }}
 									animate={{ opacity: 1, scale: 1 }}
 									transition={{ delay: 1.7 + index * 0.1, duration: 0.5 }}
 									whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
 								>
-									<span className="flex items-center gap-2 text-sm font-medium text-white/90">
-										<span>{feature.icon}</span>
+									<span className="flex items-center gap-1 text-xs font-medium text-white/90 sm:gap-2 sm:text-sm">
+										<feature.Icon className="h-4 w-4" />
 										<span>{feature.text}</span>
 									</span>
 								</motion.div>
@@ -214,23 +215,6 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 				</div>
 			</div>
 
-			{/* Bottom Decoration */}
-			<motion.div
-				className="absolute bottom-8 left-1/2 -translate-x-1/2"
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ delay: 2, duration: 0.8 }}
-			>
-				<div className="flex items-center gap-2 text-white/50">
-					<span className="text-sm">Scroll to explore</span>
-					<motion.div
-						animate={{ y: [0, 8, 0] }}
-						transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-					>
-						<span className="text-lg">↓</span>
-					</motion.div>
-				</div>
-			</motion.div>
 		</div>
 	)
 }

@@ -10,12 +10,22 @@ interface UseGameTimerProps {
 export function useGameTimer({ startTime, endTime, isPaused }: UseGameTimerProps) {
 	const [currentTime, setCurrentTime] = useState(Date.now())
 
-	// Update timer every second regardless of game state
+	// Simple inline function - no useCallback needed
 	useInterval(() => setCurrentTime(Date.now()), 1000)
 
 	const getElapsedTime = () => {
-		const endTimeToUse = endTime || currentTime
-		return Math.floor((endTimeToUse - startTime) / 1000)
+		// Safety check: if startTime is invalid, return 0
+		if (!startTime || startTime <= 0) {
+			return 0
+		}
+
+		// For paused games, use endTime to freeze the timer display
+		// For running games, always use currentTime to show live updates
+		const endTimeToUse = isPaused && endTime ? endTime : currentTime
+		const elapsed = Math.floor((endTimeToUse - startTime) / 1000)
+
+		// Return 0 if elapsed time is negative (invalid state)
+		return Math.max(0, elapsed)
 	}
 
 	const formatTime = (seconds: number) => {
