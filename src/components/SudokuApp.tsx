@@ -7,15 +7,15 @@ import { useGameTimer } from '@app/hooks/useGameTimer'
 import { useGameActions } from '@app/hooks/useGameActions'
 import { cn } from '@app/utils/cn'
 import { SUDOKU_NUMBERS, FLOATING_NUMBERS } from '@app/constants/sudoku'
-import { 
-	PencilIcon, 
-	ArrowUturnLeftIcon, 
-	PauseIcon, 
+import {
+	PencilIcon,
+	ArrowUturnLeftIcon,
+	PauseIcon,
 	ArrowPathIcon,
 	TrashIcon,
 	PlayIcon,
 	SparklesIcon,
-	HomeIcon
+	HomeIcon,
 } from '@heroicons/react/24/outline'
 import DifficultyScreen from './DifficultyScreen'
 import GameStartScreen from './GameStartScreen'

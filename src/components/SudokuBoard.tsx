@@ -167,7 +167,7 @@ const SudokuBoardInner: React.FC<SudokuBoardInnerProps> = ({
 												gameState.initialBoard[rowIndex][colIndex] !== 0 ? 'bold' : 'normal'
 											}
 											fill={getTextColor(rowIndex, colIndex)}
-											className="select-none pointer-events-none"
+											className="pointer-events-none select-none"
 										>
 											{cell}
 										</text>
@@ -248,7 +248,7 @@ const SudokuBoardInner: React.FC<SudokuBoardInnerProps> = ({
 														fontSize={noteFontSize}
 														fill={noteColor}
 														fontWeight="bold"
-														className="select-none pointer-events-none"
+														className="pointer-events-none select-none"
 													>
 														{value}
 													</text>,

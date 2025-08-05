@@ -214,7 +214,6 @@ export default function GameStartScreen({ onStartGame }: GameStartScreenProps) {
 					</motion.div>
 				</div>
 			</div>
-
 		</div>
 	)
 }
