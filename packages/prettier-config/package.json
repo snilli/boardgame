@@ -1,0 +1,20 @@
+{
+	"name": "@repo/prettier-config",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"main": "index.js",
+	"types": "index.d.ts",
+	"peerDependencies": {
+		"prettier": "^3.0.0",
+		"prettier-plugin-tailwindcss": "^0.6.0"
+	},
+	"peerDependenciesMeta": {
+		"prettier": {
+			"optional": false
+		},
+		"prettier-plugin-tailwindcss": {
+			"optional": false
+		}
+	}
+}

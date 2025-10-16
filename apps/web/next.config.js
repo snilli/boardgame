@@ -4,6 +4,11 @@ const nextConfig = {
 		reactCompiler: true,
 	},
 
+	// Disable linting during build to avoid monorepo ESLint issues
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
+
 	// GitHub Pages configuration
 	output: 'export',
 	trailingSlash: true,

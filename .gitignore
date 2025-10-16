@@ -79,5 +79,26 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 
+# Turbo
+.turbo
+
+# Build outputs
+out/
+dist/
+build/
+
+# Package manager caches
+.pnpm-store/
+.pnpm-debug.log*
+
+# Next.js
+.next/
+next-env.d.ts
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
 # Claude Code
 .claude/settings.local.json

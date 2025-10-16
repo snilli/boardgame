@@ -34,6 +34,7 @@ This file tells Claude Code how to work with this codebase.
     - Update exports in index files
     - **Test attributes and debug code** - Remove `data-testid`, debug logs, console statements
     - **Never keep code "just in case" - delete ruthlessly**
+    - **CRITICAL: Before deleting config files, ALWAYS check git history first** - Use `git log --follow --patch -- filename` to understand what the file contained and why it existed
 
 ### Styling & Mobile-First Design (CRITICAL)
 

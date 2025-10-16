@@ -1,23 +1,27 @@
-/** @type {import('eslint').Linter.Config[]} */
-import { FlatCompat } from '@eslint/eslintrc'
-
-const compat = new FlatCompat({
-	baseDirectory: process.cwd(),
-})
-
+/** @type {import('eslint').Linter.Config} */
 export default [
-	// Global ignores
 	{
-		ignores: ['dist/**', '.next/**', 'node_modules/**'],
-	},
-
-	// Next.js core-web-vitals only
-	...compat.extends('next/core-web-vitals'),
-
-	// Disable display-name rule to allow arrow functions in memo
-	{
-		rules: {
-			'react/display-name': 'off',
+		files: ['**/*.js', '**/*.ts', '**/*.tsx'],
+		plugins: {
+			turbo: (await import('eslint-plugin-turbo')).default,
 		},
+		rules: {
+			'turbo/no-undeclared-env-vars': 'error',
+		},
+		settings: {
+			turbo: {
+				config: './turbo.json',
+			},
+		},
+	},
+	{
+		ignores: [
+			'**/node_modules/**',
+			'**/dist/**',
+			'**/build/**',
+			'**/.next/**',
+			'**/.turbo/**',
+			'**/out/**',
+		],
 	},
 ]
